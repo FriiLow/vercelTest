@@ -11,6 +11,7 @@ on:
 
 jobs:
   Snyk-Scan: 
+    name: Snyk Security Scan
     uses: ./.github/workflows/snyk-security.yml
     secrets:
       SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }} 
