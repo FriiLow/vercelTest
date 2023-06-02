@@ -13,7 +13,7 @@ env:
 
 jobs:
   Security-Check:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - name: Run Snyk Security Check
         if: ${{ github.event.inputs.snyk_code_test != 'Failure' }}
@@ -21,7 +21,7 @@ jobs:
 
   Deploy-Production:
     needs: Security-Check
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:      
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
