@@ -47,6 +47,12 @@ jobs:
         #- uses: actions/setup-node@v3
         #  with:
         #    node-version: 16
+        env:
+            SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }} 
+      - name: Create snyk-code.sarif
+        run: touch snyk-code.sarif
+      - name: Snyk Auth
+        run: snyk auth ${{ secrets.SNYK_TOKEN }}
 
         # Runs Snyk Code (SAST) analysis and uploads result into GitHub.
         # Use || true to not fail the pipeline
