@@ -1,22 +1,28 @@
 name: Vercel Production Deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      snyk_code_test:
+        description: 'Snyk Code test result'
+        required: true
+
 env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-on:
-  pull_request:
-    branches:
-      - main
+
 jobs:
   Security-Check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
       - name: Run Snyk Security Check
+        if: ${{ github.event.inputs.snyk_code_test != 'Failure' }}
         uses: ./.github/workflows/snyk.yml
+
   Deploy-Production:
+    needs: Security-Check
     runs-on: ubuntu-latest
     steps:      
-      - uses: actions/checkout@v2
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
       - name: Pull Vercel Environment Information
@@ -28,7 +34,7 @@ jobs:
         id: deploy
       - uses: actions/github-script@v3
         with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             github.issues.createComment({
               issue_number: context.issue.number,
